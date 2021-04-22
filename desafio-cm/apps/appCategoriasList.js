@@ -3,7 +3,7 @@ require('dotenv/config');
 const utils = require('./../utils/utils');
 
 var AWS = require('aws-sdk');
-const s3 = new AWS.S3({ region: 'sa-east-1' });
+const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.listCategoriasHandler = async (event, context, callback) => {
     try {
@@ -11,7 +11,7 @@ exports.listCategoriasHandler = async (event, context, callback) => {
         const nome = utils.getQueryParam(queryParam, 'nome', ''); 
         const whereClause = nome ? `model.nome='${nome}'` : '';
         
-        let data = await utils.getDataFromS3(s3, 'categorias', whereClause);
+        let data = await utils.getDataFromS3(s3, process.env.CATEGORIAS_FILE_NAME, 'categorias', whereClause);
         const offset = utils.getQueryParam(queryParam, 'offset', 0); 
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
         

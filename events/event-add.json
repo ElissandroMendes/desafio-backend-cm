@@ -1,5 +1,5 @@
 {
-  "body": "{\"nome\": \"Brastemp\"}",
+  "body": "{\"nome\": \"Eletro\"}",
   "resource": "/{proxy+}",
   "path": "/path/to/resource",
   "httpMethod": "POST",

@@ -21,7 +21,7 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
             parsedData.files[0] : '';
 
         const categoriesObjects = await utils.getObjectsFromS3(s3, "categorias", 
-            process.env.MARCAS_FILE_NAME);
+            process.env.CATEGORIAS_FILE_NAME);
 
         console.log("categoriesObjects: " + JSON.stringify(categoriesObjects));
         const categoriesList = categoriesObjects.categorias;
@@ -40,7 +40,7 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
         };
 
         if (brandFound) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "categorias", categoriesObjects);
+            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", categoriesObjects);
             callback(null, utils.buildResponse(...brandUpdated));
         } else {
             callback(null, utils.buildResponse(...notFound));

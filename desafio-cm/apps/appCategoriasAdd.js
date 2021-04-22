@@ -11,12 +11,14 @@ exports.addCategoriasHandler = async (event, context, callback) => {
     try {
         let id = 1;
         let newCategoriesList = null;
-
+        console.log("-1-");
         const {categoryData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
+            console.log("-2-");
             newCategoriesList = await addToCategoriesList(categoryData);
             id = newCategoriesList.id;
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "categorias", 
+            console.log("-3-");
+            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", 
                 newCategoriesList.categoriesObject);
         } else {
             callback(null, utils.buildResponse(403, message));
@@ -48,7 +50,7 @@ async function parseAndValidateBody(event) {
 async function getCategoriesObjectFromS3() {
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: process.env.MARCAS_FILE_NAME
+        Key: process.env.CATEGORIAS_FILE_NAME
     };
 
     let categoriesObject = {"categorias": []};
@@ -62,8 +64,11 @@ async function getCategoriesObjectFromS3() {
 };
 
 async function addToCategoriesList(categoryData) {
+    console.log("-4-");
     let categoriesObject = await getCategoriesObjectFromS3();
+    console.log("-5-");
     let categoriesList = categoriesObject.categorias;
+    console.log("categoriesList: " + JSON.stringify(categoriesList));
     if (!utils.findItemByKey(categoriesList, 'nome', categoryData.nome)) {        
         // await Promise.all(
         //     data.files.map(async file => {

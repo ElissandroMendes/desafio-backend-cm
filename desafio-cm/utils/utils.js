@@ -18,11 +18,11 @@ exports.buildResponse = (statusCode, messageData) => {
   };
 };
 
-exports.buildQueryParams = (modelName, whereClause) => {
+exports.buildQueryParams = (s3Key, modelName, whereClause) => {
   let sql = `Select * From s3object[*].${modelName}[*] model ${whereClause ? ' where ' + whereClause : '' };`;
   return {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: process.env.MARCAS_FILE_NAME,
+      Key: s3Key,
       ExpressionType: 'SQL',
       Expression: sql,
       InputSerialization: {
@@ -51,8 +51,8 @@ exports.saveToS3 = async (S3, S3Key, modelName, brandData) => {
   return result;
 };
 
-exports.getDataFromS3 = async (s3, modelName, whereClause) => {
-  const queryParams = exports.buildQueryParams(modelName, whereClause);
+exports.getDataFromS3 = async (s3, s3Key, modelName, whereClause) => {
+  const queryParams = exports.buildQueryParams(s3Key, modelName, whereClause);
 
   return new Promise((resolve, reject) => {
       s3.selectObjectContent(queryParams, (err, data) => {
