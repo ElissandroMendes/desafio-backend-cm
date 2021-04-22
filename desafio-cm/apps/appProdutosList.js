@@ -1,17 +1,17 @@
 require('dotenv/config');
 
-const utils = require('./utils/utils');
+const utils = require('./../utils/utils');
 
 var AWS = require('aws-sdk');
 const s3 = new AWS.S3({ region: 'sa-east-1' });
 
-exports.listCategoriasHandler = async (event, context, callback) => {
+exports.listMarcasHandler = async (event, context, callback) => {
     try {
         const queryParam = event.queryStringParameters;
         const nome = utils.getQueryParam(queryParam, 'nome', ''); 
         const whereClause = nome ? `model.nome='${nome}'` : '';
         
-        let data = await utils.getDataFromS3(s3, 'categorias', whereClause);
+        let data = await utils.getDataFromS3(s3, 'marcas', whereClause);
         const offset = utils.getQueryParam(queryParam, 'offset', 0); 
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
         

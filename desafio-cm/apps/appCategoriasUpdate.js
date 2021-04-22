@@ -2,7 +2,7 @@ require('dotenv/config');
 
 const parser = require('lambda-multipart-parser');
 
-const utils = require('./utils/utils');
+const utils = require('./../utils/utils');
 
 var AWS = require('aws-sdk');
 const s3 = new AWS.S3({ region: process.env.AWS_REGION });
