@@ -1,7 +1,7 @@
 {
-  "name": "hello_world",
+  "name": "DesafioBackendCM",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
+  "description": "Desafio developer backend da Casas Magalhães",
   "main": "app.js",
   "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
   "author": "SAM CLI",
@@ -9,8 +9,6 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "lambda-multipart-parser": "^1.0.1",
-    "multer": "^1.4.2",
-    "multer-s3": "^2.9.0",
     "uuid": "^8.3.2"
   },
   "scripts": {

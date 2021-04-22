@@ -47,7 +47,7 @@ Resources:
   MarcaGetFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: desafio-cm/
+      CodeUri: desafio-cm/apps
       Handler: appMarcasList.listMarcasHandler
       Policies:
       - AmazonS3FullAccess
@@ -66,7 +66,7 @@ Resources:
   MarcaAddFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: desafio-cm/
+      CodeUri: desafio-cm/apps
       Handler: appMarcasAdd.addMarcasHandler
       Policies:
       - AmazonS3FullAccess
@@ -80,7 +80,7 @@ Resources:
   MarcaUpdateFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: desafio-cm/
+      CodeUri: desafio-cm/apps
       Handler: appMarcasUpdate.updateMarcasHandler
       Policies:
       - AmazonS3FullAccess
@@ -99,7 +99,7 @@ Resources:
   MarcaDeleteFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: desafio-cm/
+      CodeUri: desafio-cm/apps
       Handler: appMarcasDelete.deleteMarcasHandler
       Policies:
       - AmazonS3FullAccess
@@ -108,4 +108,70 @@ Resources:
           Type: Api
           Properties:
             Path: /marcas/{id}
+            Method: delete
+
+  CategoriaGetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/apps
+      Handler: appCategoriasList.listCategoriasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        CategoriasListAll:
+          Type: Api
+          Properties:
+            Path: /categorias
+            Method: get
+        CategoriasListById:
+          Type: Api
+          Properties:
+            Path: /categorias/{id}
+            Method: get
+
+  CategoriaAddFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/apps
+      Handler: appCategoriasAdd.addCategoriasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        MarcasAdd:
+          Type: Api
+          Properties:
+            Path: /categorias
+            Method: post
+
+  CategoriaUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/apps
+      Handler: appCategoriasUpdate.updateMarcasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        CategoriasPut:
+          Type: Api
+          Properties:
+            Path: /categorias/{id}
+            Method: put
+        CategoriasPatch:
+          Type: Api
+          Properties:
+            Path: /categorias/{id}
+            Method: patch
+
+  CategoriasDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/apps
+      Handler: appCategoriasDelete.deleteCategoriassHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        CategoriasDeleteById:
+          Type: Api
+          Properties:
+            Path: /categorias/{id}
             Method: delete
