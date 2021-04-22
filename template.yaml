@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  DesafioBackendCM
+
+  Template SAM para criação de infrastrutura para backend de uma API de Produtos
+  
+
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs14.x
+  Api:
+    BinaryMediaTypes:
+    - "multipart~1form-data" 
+
+Parameters:
+  DesafioBackendCMBucket:
+    Type: String
+    Default: "bucket-desafiobackendcm"
+
+Resources:
+  DesafioBackendS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: !Ref DesafioBackendCMBucket
+      AccessControl: PublicRead
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref DesafioBackendS3Bucket
+                - /*
+      Bucket: !Ref DesafioBackendS3Bucket
+
+  MarcaGetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: appMarcasList.listMarcasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        MarcaListAll:
+          Type: Api
+          Properties:
+            Path: /marcas
+            Method: get
+        MarcaListById:
+          Type: Api
+          Properties:
+            Path: /marcas/{id}
+            Method: get
+
+  MarcaAddFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: appMarcasAdd.addMarcasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        MarcasAdd:
+          Type: Api
+          Properties:
+            Path: /marcas
+            Method: post
+
+  MarcaUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: appMarcasUpdate.updateMarcasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        MarcasPut:
+          Type: Api
+          Properties:
+            Path: /marcas/{id}
+            Method: put
+        MarcasPatch:
+          Type: Api
+          Properties:
+            Path: /marcas/{id}
+            Method: patch
+
+  MarcaDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: appMarcasDelete.deleteMarcasHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        MarcaDeleteById:
+          Type: Api
+          Properties:
+            Path: /marcas/{id}
+            Method: delete
