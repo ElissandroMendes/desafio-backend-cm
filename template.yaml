@@ -166,7 +166,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appCategoriasDelete.deleteCategoriassHandler
+      Handler: apps/appCategoriasDelete.deleteCategoriasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
