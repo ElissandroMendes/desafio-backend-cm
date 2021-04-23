@@ -18,7 +18,7 @@ exports.deleteProdutosHandler = async (event, context, callback) => {
         console.log("productsObjects Depois: " + JSON.stringify(productsObjects));
         
         if (productsObjects.produtos.length < numItems) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "produtos", productsObjects);
+            await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", productsObjects);
             callback(null, utils.buildResponse(...productDeleted));
         } else {
             callback(null, utils.buildResponse(...notFound));
