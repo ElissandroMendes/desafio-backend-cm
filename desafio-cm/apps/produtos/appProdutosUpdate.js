@@ -2,46 +2,46 @@ require('dotenv/config');
 
 const parser = require('lambda-multipart-parser');
 
-const utils = require('./../utils/utils');
+const utils = require('./../../utils/utils');
 
 var AWS = require('aws-sdk');
 const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
-exports.updateMarcasHandler = async (event, context, callback) => {
-    const notFound = [404, {"message": "Brand not found."}];
-    const brandUpdated = [200, {"message": "Brand updated successfully."}];
+exports.updateProdutosHandler = async (event, context, callback) => {
+    const notFound = [404, {"message": "Product not found."}];
+    const productUpdated = [200, {"message": "Product updated successfully."}];
     try {
         const parsedData = await parser.parse(event);
         const { id } = event.pathParameters;
 
-        let newBrandData = {};
-        newBrandData.id = id;
-        newBrandData.nome = parsedData.nome;
-        newBrandData.imagem = parsedData.files && parsedData.files.length ? 
+        let newProductData = {};
+        newProductData.id = id;
+        newProductData.nome = parsedData.nome;
+        newProductData.imagem = parsedData.files && parsedData.files.length ? 
             parsedData.files[0] : '';
 
-        const brandsObjects = await utils.getObjectsFromS3(s3, "marcas", 
-            process.env.MARCAS_FILE_NAME);
+        const productsObjects = await utils.getObjectsFromS3(s3, "produtos", 
+            process.env.PRODUTOS_FILE_NAME);
 
-        console.log("brandsObjects: " + JSON.stringify(brandsObjects));
-        const brandsList = brandsObjects.marcas;
+        console.log("productsObjects: " + JSON.stringify(productsObjects));
+        const productsList = productsObjects.produtos;
 
-        let brandFound = false;
-        for (let idx = 0; idx < brandsList.length; idx++) {
-            let brand = brandsList[idx];
-            brandFound = brandsList[idx].id == newBrandData.id;
-            if (brandFound) {
-                brandsList[idx].nome = newBrandData.nome;
-                if (newBrandData.imagem) {
-                    brandsList[idx].imagem = utils.uploadFileIntoS3(s3, newBrandData.imagem);
+        let productFound = false;
+        for (let idx = 0; idx < productsList.length; idx++) {
+            let product = productsList[idx];
+            productFound = productsList[idx].id == newProductData.id;
+            if (productFound) {
+                productsList[idx].nome = newProductData.nome;
+                if (newProductData.imagem) {
+                    productsList[idx].imagem = utils.uploadFileIntoS3(s3, newProductData.imagem);
                 };
                 break;
             };
         };
 
-        if (brandFound) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", brandsObjects);
-            callback(null, utils.buildResponse(...brandUpdated));
+        if (productFound) {
+            await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", productsObjects);
+            callback(null, utils.buildResponse(...productUpdated));
         } else {
             callback(null, utils.buildResponse(...notFound));
         }

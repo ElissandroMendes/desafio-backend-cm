@@ -1,25 +1,25 @@
 require('dotenv/config');
 
-const utils = require('./../utils/utils');
+const utils = require('./../../utils/utils');
 
 var AWS = require('aws-sdk');
 const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
-exports.deleteMarcasHandler = async (event, context, callback) => {
-    const notFound = [404, {"message": "Brand not found."}];
-    const brandDeleted = [200, {"message": "Brand removed successfully."}];
+exports.deleteProdutosHandler = async (event, context, callback) => {
+    const notFound = [404, {"message": "Product not found."}];
+    const productDeleted = [200, {"message": "Product removed successfully."}];
     try {
         const { id } = event.pathParameters;
-        const brandsObjects = await utils.getObjectsFromS3(s3, "marcas", process.env.MARCAS_FILE_NAME);
-        console.log("brandsObjects: " + JSON.stringify(brandsObjects));
+        const productsObjects = await utils.getObjectsFromS3(s3, "produtos", process.env.PRODUTOS_FILE_NAME);
+        console.log("productsObjects: " + JSON.stringify(productsObjects));
         
-        const numItems = brandsObjects.marcas.length;
-        utils.removeItemById(brandsObjects.marcas, id);
-        console.log("brandsObjects Depois: " + JSON.stringify(brandsObjects));
+        const numItems = productsObjects.produtos.length;
+        utils.removeItemById(productsObjects.produtos, id);
+        console.log("productsObjects Depois: " + JSON.stringify(productsObjects));
         
-        if (brandsObjects.marcas.length < numItems) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", brandsObjects);
-            callback(null, utils.buildResponse(...brandDeleted));
+        if (productsObjects.produtos.length < numItems) {
+            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "produtos", productsObjects);
+            callback(null, utils.buildResponse(...productDeleted));
         } else {
             callback(null, utils.buildResponse(...notFound));
         }
