@@ -9,19 +9,17 @@ const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.addProdutosHandler = async (event, context, callback) => {
     try {
-        let id = 1;
         let newProductsList = null;
-
         const {productData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
             newProductsList = await addToProductsList(productData);
-            id = newProductsList.id;
+            console.log("newProductsList.productsObject" + JSON.stringify(newProductsList.productsObject));
             await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", 
                 newProductsList.productsObject);
         } else {
-            callback(null, utils.buildResponse(403, message));
+            callback(null, utils.buildResponse(403, {message}));
         }
-        callback(null, utils.buildResponse(200, {"message":`Product added successfully. ID: ${id}`}));
+        callback(null, utils.buildResponse(200, {"message":`Product added successfully. ID: ${newProductsList.id}`}));
     } catch(error) {
         callback(null, utils.buildResponse(400, error.message));
     }
@@ -30,52 +28,76 @@ exports.addProdutosHandler = async (event, context, callback) => {
 async function parseAndValidateBody(event) {
     let productData = {};
     let isValid = false;
-    let message = '';
+    let message = [];
 
     try {
         const parsedData = await parser.parse(event);
-        productData.nome = parsedData.nome;
-        productData.imagem = parsedData.files[0];
-        isValid = productData.nome != undefined && !!productData.nome;
-        message = !isValid ? 'Field NOME is mandatory.' : 'OK'; 
+
+        console.log("Parsed data: " + JSON.stringify(parsedData));
+        
+        productData.descricao = parsedData.descricao;
+        productData.marca = parsedData.marca;
+        productData.categorias = JSON.parse(parsedData.categorias);
+        productData.precoVenda = Number(parsedData.precoVenda);
+        productData.precoCusto = Number(parsedData.precoCusto);
+        productData.imagens = parsedData.files;
+
+        if (!productData.descricao) {
+            message.push('Field DESCRICAO is mandatory.'); 
+        };
+
+        if (!productData.marca) {
+            message.push('Field MARCA is mandatory.'); 
+        };
+
+        if (!productData.precoVenda) {
+            message.push('A valid Field PRECO VENDA is mandatory.'); 
+        };
+
+        const invalidCategory = !productData.categorias || 
+            ((typeof(productData.categorias) == 'object' && 'push' in productData.categorias) && !productData.categorias.length);
+        if (invalidCategory) {
+            message.push('Field CATEGORIA is mandatory.'); 
+        } 
     } catch(err) {
-        message = `Unable to parse Event body.\r\nError: ${err}`; 
+        message.push(`Unable to parse Event body.\r\nError: ${err}`); 
     }
-    
+
+    isValid = message.length == 0;
+    message = isValid ? 'OK' : message.join('\r\n');
     return {productData, isValid, message};
 };
 
-async function getProductsObjectFromS3() {
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: process.env.MARCAS_FILE_NAME
-    };
-
-    let productsObject = {"produtos": []};
-    try {
-        let objects = await s3.getObject(params).promise();
-        productsObject = JSON.parse(objects.Body.toString());
-    } catch (err) {
-        console.log('Object does not exist.');
-    }
-    return brandsObject;
-};
-
 async function addToProductsList(productData) {
-    let productsObject = await getProductsObjectFromS3();
+    let productsObject = await utils.getObjectsFromS3(s3, "produtos", process.env.PRODUTOS_FILE_NAME);
+    console.log("productsObject: " + JSON.stringify(productsObject));
     let productsList = productsObject.produtos;
-    if (!utils.findItemByKey(productsList, 'nome', productData.nome)) {        
-        // await Promise.all(
-        //     data.files.map(async file => {
-        //         console.log(`Uploading imagem ${file.filename}`)
-        //         await uploadFileIntoS3(file);
-        //     })
-        // );
-        const imageNameS3 = await utils.uploadFileIntoS3(s3, productData.imagem);
-
+    console.log("productsList: " + JSON.stringify(productsList));
+    if (canAddProductToList(productsList, productData)) {        
         productData.id = utils.getLastId(productsList) + 1;
-        productData.imagem = imageNameS3;
+
+        let imagens = [];
+        await Promise.all(
+            productData.imagens.map(async file => {
+                imagens.push(await utils.uploadFileIntoS3(s3, file));
+            })
+        );
+
+        productData.imagens = imagens;
         productsList.push(productData); 
     }
     return {"id": productData.id, productsObject};
+};
+
+function canAddProductToList (productList, newProductData) {
+    const productListOrdered = utils.sortArrayByKey(productList, 'marca');  
+    let duplicateInBrandsProductFound = false;
+    for (let idx = 0; idx < productListOrdered.length; idx++) {
+        const product = productListOrdered[idx];
+        if (product.marca == newProductData.marca && product.descricao == newProductData.descricao) {
+            duplicateInBrandProductFound = true;
+            break;
+        };
+    };
+    return !duplicateInBrandsProductFound;
 };

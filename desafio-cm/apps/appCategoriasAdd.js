@@ -70,12 +70,6 @@ async function addToCategoriesList(categoryData) {
     let categoriesList = categoriesObject.categorias;
     console.log("categoriesList: " + JSON.stringify(categoriesList));
     if (!utils.findItemByKey(categoriesList, 'nome', categoryData.nome)) {        
-        // await Promise.all(
-        //     data.files.map(async file => {
-        //         console.log(`Uploading imagem ${file.filename}`)
-        //         await uploadFileIntoS3(file);
-        //     })
-        // );
         const imageNameS3 = await utils.uploadFileIntoS3(s3, categoryData.imagem);
 
         categoryData.id = utils.getLastId(categoriesList) + 1;

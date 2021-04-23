@@ -124,7 +124,8 @@ exports.getObjectsFromS3 = async (S3, modelName, S3Key) => {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: S3Key
   };
-  let modelObjects = {modelName: []};
+  let modelObjects = {};
+  modelObjects[modelName] = [];
   try {
       let objects = await S3.getObject(params).promise();
       modelObjects = JSON.parse(objects.Body.toString());

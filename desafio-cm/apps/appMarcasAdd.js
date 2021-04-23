@@ -65,12 +65,6 @@ async function addToBrandsList(brandData) {
     let brandsObject = await getBrandsObjectFromS3();
     let brandsList = brandsObject.marcas;
     if (!utils.findItemByKey(brandsList, 'nome', brandData.nome)) {        
-        // await Promise.all(
-        //     data.files.map(async file => {
-        //         console.log(`Uploading imagem ${file.filename}`)
-        //         await uploadFileIntoS3(file);
-        //     })
-        // );
         const imageNameS3 = await utils.uploadFileIntoS3(s3, brandData.imagem);
 
         brandData.id = utils.getLastId(brandsList) + 1;
