@@ -33,14 +33,16 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
             if (brandFound) {
                 categoriesList[idx].nome = newCategoryData.nome;
                 if (newCategoryData.imagem) {
-                    categoriesList[idx].imagem = utils.uploadFileIntoS3(s3, newCategoryData.imagem);
+                    categoriesList[idx].imagem = utils.uploadFileIntoS3(s3, 
+                        newCategoryData.imagem);
                 };
                 break;
             };
         };
 
         if (brandFound) {
-            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", categoriesObjects);
+            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, 
+                "categorias", categoriesObjects);
             callback(null, utils.buildResponse(...brandUpdated));
         } else {
             callback(null, utils.buildResponse(...notFound));

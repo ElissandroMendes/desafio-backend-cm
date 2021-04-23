@@ -11,11 +11,9 @@ exports.deleteProdutosHandler = async (event, context, callback) => {
     try {
         const { id } = event.pathParameters;
         const productsObjects = await utils.getObjectsFromS3(s3, "produtos", process.env.PRODUTOS_FILE_NAME);
-        console.log("productsObjects: " + JSON.stringify(productsObjects));
         
         const numItems = productsObjects.produtos.length;
         utils.removeItemById(productsObjects.produtos, id);
-        console.log("productsObjects Depois: " + JSON.stringify(productsObjects));
         
         if (productsObjects.produtos.length < numItems) {
             await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", productsObjects);

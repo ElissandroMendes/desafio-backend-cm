@@ -22,8 +22,6 @@ exports.updateMarcasHandler = async (event, context, callback) => {
 
         const brandsObjects = await utils.getObjectsFromS3(s3, "marcas", 
             process.env.MARCAS_FILE_NAME);
-
-        console.log("brandsObjects: " + JSON.stringify(brandsObjects));
         const brandsList = brandsObjects.marcas;
 
         let brandFound = false;
@@ -33,14 +31,16 @@ exports.updateMarcasHandler = async (event, context, callback) => {
             if (brandFound) {
                 brandsList[idx].nome = newBrandData.nome;
                 if (newBrandData.imagem) {
-                    brandsList[idx].imagem = utils.uploadFileIntoS3(s3, newBrandData.imagem);
+                    brandsList[idx].imagem = 
+                        utils.uploadFileIntoS3(s3, newBrandData.imagem);
                 };
                 break;
             };
         };
 
         if (brandFound) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", brandsObjects);
+            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, 
+                "marcas", brandsObjects);
             callback(null, utils.buildResponse(...brandUpdated));
         } else {
             callback(null, utils.buildResponse(...notFound));

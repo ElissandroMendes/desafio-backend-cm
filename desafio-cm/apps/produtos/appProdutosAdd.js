@@ -14,7 +14,6 @@ exports.addProdutosHandler = async (event, context, callback) => {
         if (isValid) {
             newProductsList = await addToProductsList(productData);
             if (newProductsList.id) {
-                console.log("newProductsList.productsObject: " + JSON.stringify(newProductsList.productsObject));
                 await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", 
                     newProductsList.productsObject, 'descricao');
             } else {
@@ -71,16 +70,11 @@ async function parseAndValidateBody(event) {
 };
 
 async function addToProductsList(productData) {
-    console.log("addToProductsList productData: " + JSON.stringify(productData));
     let productsObject = await utils.getObjectsFromS3(s3, "produtos", process.env.PRODUTOS_FILE_NAME);
-    console.log("getObjectsFromS3 productsObject: " + JSON.stringify(productsObject));
     let productsList = productsObject.produtos;
-    console.log("productsList: " + JSON.stringify(productsList));
 
     let response = {"id": null, productsObject};
     if (canAddProductToList(productsList, productData)) {        
-        console.log("canAddProductToList productsList: " + JSON.stringify(productsList));
-        console.log("canAddProductToList productData: " + JSON.stringify(productData));
         productData.id = utils.getLastId(productsList) + 1;
 
         let imagens = [];
@@ -99,7 +93,6 @@ async function addToProductsList(productData) {
 
 function canAddProductToList (productList, newProductData) {
     const productListOrdered = utils.sortArrayByKey(productList, 'marca');
-    console.log("canAddProductToList productListOrdered: " + JSON.stringify(productListOrdered));
     let duplicateInBrandsProductFound = false;
     for (let idx = 0; idx < productListOrdered.length; idx++) {
         const product = productListOrdered[idx];

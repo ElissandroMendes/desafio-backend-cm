@@ -11,31 +11,24 @@ exports.updateProdutosHandler = async (event, context, callback) => {
     const notFound = [404, {"message": "Product not found."}];
     const productUpdated = [200, {"message": "Product updated successfully."}];
     try {
+        const { id } = event.pathParameters || {};
         const parsedData = await parser.parse(event);
-        const { id } = event.pathParameters;
-
-        console.log("parsedData: " + JSON.stringify(parsedData));
 
         let newProductData = {};
         for (const key in parsedData) {
-            console.log("key: " + key);
             if (Object.hasOwnProperty.call(parsedData, key)) {
                 newProductData[key] = parsedData[key];
             }
         }
-        console.log("newProductData: " + JSON.stringify(newProductData));
-        
+
         newProductData.id = id;
         newProductData.imagens = parsedData.files;
+        //Trocamos o atributo files por imagens para manter a consistencia.
+        //Então removemos o atributo files.
         delete newProductData.files;
-        
-        console.log("1 newProductData: " + JSON.stringify(newProductData));
 
         const productsObjects = await utils.getObjectsFromS3(s3, "produtos", 
             process.env.PRODUTOS_FILE_NAME);
-
-        console.log("productsObjects: " + JSON.stringify(productsObjects));
-
         const productsList = productsObjects.produtos;
 
         let productFound = false;
@@ -58,7 +51,6 @@ exports.updateProdutosHandler = async (event, context, callback) => {
         };
 
         if (productFound) {
-            console.log("productsObjects Depois: " + JSON.stringify(productsObjects));
             await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", productsObjects);
             callback(null, utils.buildResponse(...productUpdated));
         } else {

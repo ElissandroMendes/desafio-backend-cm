@@ -11,7 +11,8 @@ exports.listCategoriasHandler = async (event, context, callback) => {
         const nome = utils.getQueryParam(queryParam, 'nome', ''); 
         const whereClause = nome ? `model.nome='${nome}'` : '';
         
-        let data = await utils.getDataFromS3(s3, process.env.CATEGORIAS_FILE_NAME, 'categorias', whereClause);
+        let data = await utils.getDataFromS3(s3, process.env.CATEGORIAS_FILE_NAME, 
+            "categorias", whereClause);
         const offset = utils.getQueryParam(queryParam, 'offset', 0); 
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
         

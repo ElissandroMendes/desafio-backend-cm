@@ -10,15 +10,14 @@ exports.deleteMarcasHandler = async (event, context, callback) => {
     const brandDeleted = [200, {"message": "Brand removed successfully."}];
     try {
         const { id } = event.pathParameters;
-        const brandsObjects = await utils.getObjectsFromS3(s3, "marcas", process.env.MARCAS_FILE_NAME);
-        console.log("brandsObjects: " + JSON.stringify(brandsObjects));
-        
+        const brandsObjects = await utils.getObjectsFromS3(s3, "marcas", 
+            process.env.MARCAS_FILE_NAME);        
         const numItems = brandsObjects.marcas.length;
         utils.removeItemById(brandsObjects.marcas, id);
-        console.log("brandsObjects Depois: " + JSON.stringify(brandsObjects));
         
         if (brandsObjects.marcas.length < numItems) {
-            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", brandsObjects);
+            await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, 
+                "marcas", brandsObjects);
             callback(null, utils.buildResponse(...brandDeleted));
         } else {
             callback(null, utils.buildResponse(...notFound));

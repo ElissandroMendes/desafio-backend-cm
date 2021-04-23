@@ -17,12 +17,14 @@ exports.addMarcasHandler = async (event, context, callback) => {
                 await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", 
                     newBrandsList.brandsObject);
             } else {
-                callback(null, utils.buildResponse(403, {"message": "Brand already exists."}));    
+                callback(null, utils.buildResponse(403, 
+                    {"message": "Brand already exists."}));    
             }
         } else {
             callback(null, utils.buildResponse(403, message));
         }
-        callback(null, utils.buildResponse(200, {"message":`Brand added successfully. ID: ${newBrandsList.id}`}));
+        callback(null, utils.buildResponse(200, 
+            {"message":`Brand added successfully. ID: ${newBrandsList.id}`}));
     } catch(error) {
         callback(null, utils.buildResponse(400, error.message));
     }
@@ -47,7 +49,8 @@ async function parseAndValidateBody(event) {
 };
 
 async function addToBrandsList(brandData) {
-    let brandsObject = await utils.getObjectsFromS3(s3, "marcas", process.env.MARCAS_FILE_NAME);
+    let brandsObject = await utils.getObjectsFromS3(s3, "marcas", 
+        process.env.MARCAS_FILE_NAME);
     let brandsList = brandsObject.marcas;
 
     let response = {"id": null, brandsObject}

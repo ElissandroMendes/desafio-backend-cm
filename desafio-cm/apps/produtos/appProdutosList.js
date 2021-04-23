@@ -7,6 +7,8 @@ const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.listProdutosHandler = async (event, context, callback) => {
     try {
+        const { id } = event.pathParameters || {};
+
         const queryParam = event.queryStringParameters;
         const offset = utils.getQueryParam(queryParam, 'offset', 0); 
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
@@ -29,25 +31,21 @@ exports.listProdutosHandler = async (event, context, callback) => {
         if (category) {
             category = categories.find(c => c.nome == category);
         }
-        console.log("Category: " + JSON.stringify(category));
         
         let products = await utils.getObjectsFromS3(s3, 'produtos', process.env.PRODUTOS_FILE_NAME);
         products = products.produtos;
-        console.log("products: " + JSON.stringify(products));
-        
-        products = utils.applyPagination(products, offset, limit);
 
-        console.log("pagination products: " + JSON.stringify(products));
+        products = utils.applyPagination(products, offset, limit);
 
         //Aplica filtro por marca, categoria e descrição
         let productsFiltered = products.filter((product => {
+            const okId = id ? product.id == id : true;
             const okBrand = brand ? product.marca == brand.id : true;
             const okCategory = category ? product.categorias.includes(category.id) : true;
             const okDescription = description ? product.descricao.indexOf(description) > -1 : true;
-            return okBrand && okCategory && okDescription;
+            return okId && okBrand && okCategory && okDescription;
         }));
-        console.log("productsFiltered: " + JSON.stringify(productsFiltered));
-
+        
         // Troca os ID's pelos objetos de marcas e categorias na listagem.
         productsFiltered.map(product => {
             product.marca = brands.find(brand => brand.id == product.marca);

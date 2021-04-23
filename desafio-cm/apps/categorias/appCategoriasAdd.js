@@ -14,15 +14,17 @@ exports.addCategoriasHandler = async (event, context, callback) => {
         if (isValid) {
             newCategoriesList = await addToCategoriesList(categoryData);
             if (newCategoriesList.id) {
-                await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", 
-                    newCategoriesList.categoriesObject);
+                await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, 
+                    "categorias", newCategoriesList.categoriesObject);
             } else {
-                callback(null, utils.buildResponse(403, {"message": "Category already exists."}));
+                callback(null, utils.buildResponse(403, 
+                    {"message": "Category already exists."}));
             }
         } else {
             callback(null, utils.buildResponse(403, message));
         }
-        callback(null, utils.buildResponse(200, {"message":`Category added successfully. ID: ${newCategoriesList.id}`}));
+        callback(null, utils.buildResponse(200, 
+            {"message":`Category added successfully. ID: ${newCategoriesList.id}`}));
     } catch(error) {
         callback(null, utils.buildResponse(400, error.message));
     }
@@ -63,7 +65,8 @@ async function getCategoriesObjectFromS3() {
 };
 
 async function addToCategoriesList(categoryData) {
-    let categoriesObject = await utils.getObjectsFromS3(s3, "categorias", process.env.CATEGORIAS_FILE_NAME);
+    let categoriesObject = await utils.getObjectsFromS3(s3, 
+        "categorias", process.env.CATEGORIAS_FILE_NAME);
     let categoriesList = categoriesObject.categorias;
     if (!utils.findItemByKey(categoriesList, 'nome', categoryData.nome)) {        
         categoryData.id = utils.getLastId(categoriesList) + 1;

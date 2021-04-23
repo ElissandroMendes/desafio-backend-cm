@@ -10,13 +10,15 @@ exports.deleteCategoriasHandler = async (event, context, callback) => {
     const categoryDeleted = [200, {"message": "Category removed successfully."}];
     try {
         const { id } = event.pathParameters;
-        const categoriesObjects = await utils.getObjectsFromS3(s3, "categorias", process.env.CATEGORIAS_FILE_NAME);
+        const categoriesObjects = await utils.getObjectsFromS3(s3, 
+            "categorias", process.env.CATEGORIAS_FILE_NAME);
         
         const numItems = categoriesObjects.categorias.length;
         utils.removeItemById(categoriesObjects.categorias, id);
         
         if (categoriesObjects.categorias.length < numItems) {
-            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", categoriesObjects);
+            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, 
+                "categorias", categoriesObjects);
             callback(null, utils.buildResponse(...categoryDeleted));
         } else {
             callback(null, utils.buildResponse(...notFound));
