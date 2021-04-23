@@ -11,17 +11,25 @@ exports.updateProdutosHandler = async (event, context, callback) => {
     const notFound = [404, {"message": "Product not found."}];
     const productUpdated = [200, {"message": "Product updated successfully."}];
     try {
-        let newProductData = {};
-        
         const parsedData = await parser.parse(event);
         const { id } = event.pathParameters;
 
-        Object.assign(newProductData, parsedData);
+        console.log("parsedData: " + JSON.stringify(parsedData));
+
+        let newProductData = {};
+        for (const key in parsedData) {
+            console.log("key: " + key);
+            if (Object.hasOwnProperty.call(parsedData, key)) {
+                newProductData[key] = parsedData[key];
+            }
+        }
+        console.log("newProductData: " + JSON.stringify(newProductData));
+        
         newProductData.id = id;
-        newProductData.categorias = JSON.parse(parsedData.categorias);
         newProductData.imagens = parsedData.files;
         delete newProductData.files;
-        console.log("newProductData: " + JSON.stringify(newProductData));
+        
+        console.log("1 newProductData: " + JSON.stringify(newProductData));
 
         const productsObjects = await utils.getObjectsFromS3(s3, "produtos", 
             process.env.PRODUTOS_FILE_NAME);
@@ -36,7 +44,7 @@ exports.updateProdutosHandler = async (event, context, callback) => {
             productFound = productsList[idx].id == newProductData.id;
             if (productFound) {
                 Object.assign(product, newProductData);
-                if (newProductData.imagens) {
+                if (newProductData.imagens && newProductData.imagens.length) {
                     let imagens = [];
                     await Promise.all(
                         newProductData.imagens.map(async file => {

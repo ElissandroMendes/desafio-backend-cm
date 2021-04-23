@@ -7,7 +7,7 @@
   "queryStringParameters": {
   },
   "pathParameters": {
-    "proxy": "/path/to/resource"
+    "id": "2"
   },
   "stageVariables": {
     "baz": "qux"
