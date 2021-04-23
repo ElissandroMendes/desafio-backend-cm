@@ -1,6 +1,6 @@
 # Desafio Backend Developer Casa Magalhães
 
-Esse projeto é a resposta do desafio técnico para desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambdas function, as especificações estão descritas no link abaixo:
+Esse projeto é a resposta do desafio técnico para desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambda functions, as especificações estão descritas no link abaixo:
 
 [Especificações do desafio](https://gist.github.com/andersao/664a9a45ee550beb0b4905a5236e86d5)
 
@@ -87,7 +87,7 @@ $> aws configure
 - Node.js - [Install Node.js 14](https://nodejs.org/en/)
 - Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
 
-O Docker é útil para invocação local das Lambdas functions.
+O Docker é útil para invocação local das Lambda functions.
 
 Após a instalação dos pré-requisitos acima, clonar o repositório e dentro da pasta do projeto, executar:
 
@@ -96,8 +96,12 @@ sam build
 sam deploy --guided
 ```
 
-O primeiro comand irá executar um build da aplicação. O segundo fará o deploy da aplicação para a AWS.
-Para esse primeiro deploy é interessante usarmos a opção --guided. Teremos uma série de perguntas:
+O primeiro comand irá executar um build da aplicação.
+O segundo fará o deploy da aplicação para a AWS.
+
+Para esse primeiro deploy é interessante usarmos a opção --guided.
+
+Teremos uma série de perguntas:
 
 - **Stack Name**: Nome da stack a criad ano CloudFormation. Deve ser único para sua conta e região, uma sugestão seria o nome do projeto.
 - **AWS Region**: Região da AWS para onde seu projeto dever ser enviado.
