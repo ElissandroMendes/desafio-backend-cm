@@ -9,21 +9,16 @@ const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.addCategoriasHandler = async (event, context, callback) => {
     try {
-        let id = 1;
         let newCategoriesList = null;
-        console.log("-1-");
         const {categoryData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
-            console.log("-2-");
             newCategoriesList = await addToCategoriesList(categoryData);
-            id = newCategoriesList.id;
-            console.log("-3-");
             await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", 
                 newCategoriesList.categoriesObject);
         } else {
             callback(null, utils.buildResponse(403, message));
         }
-        callback(null, utils.buildResponse(200, {"message":`Category added successfully. ID: ${id}`}));
+        callback(null, utils.buildResponse(200, {"message":`Category added successfully. ID: ${newCategoriesList.id}`}));
     } catch(error) {
         callback(null, utils.buildResponse(400, error.message));
     }

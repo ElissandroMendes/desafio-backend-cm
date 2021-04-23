@@ -9,19 +9,16 @@ const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.addMarcasHandler = async (event, context, callback) => {
     try {
-        let id = 1;
         let newBrandsList = null;
-
         const {brandData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
             newBrandsList = await addToBrandsList(brandData);
-            id = newBrandsList.id;
             await utils.saveToS3(s3, process.env.MARCAS_FILE_NAME, "marcas", 
                 newBrandsList.brandsObject);
         } else {
             callback(null, utils.buildResponse(403, message));
         }
-        callback(null, utils.buildResponse(200, {"message":`Brand added successfully. ID: ${id}`}));
+        callback(null, utils.buildResponse(200, {"message":`Brand added successfully. ID: ${newBrandsList.id}`}));
     } catch(error) {
         callback(null, utils.buildResponse(400, error.message));
     }
