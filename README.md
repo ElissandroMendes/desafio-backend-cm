@@ -1,6 +1,6 @@
 # Desafio Backend Developer Casa Magalhães
 
-Esse projeto é a resposta do desafio técnico para a vaga de desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambdas function, as especificações estão descritas no link abaixo:
+Esse projeto é a resposta do desafio técnico para desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambdas function, as especificações estão descritas no link abaixo:
 
 [Especificações do desafio](https://gist.github.com/andersao/664a9a45ee550beb0b4905a5236e86d5)
 
@@ -18,9 +18,9 @@ A API está implantada no API Gateway na URL abaixo:
 
 - [API REST URL](https://u150v2ccc6.execute-api.sa-east-1.amazonaws.com/Prod/)
 
-Para implementação dos enpoints da API no API Gateway usamos o SAM Template, que consta nesse repositório.
+Para implementação dos endpoints da API no API Gateway usamos o SAM Template, que consta nesse repositório.
 
-A API consta dos seguinte endpoints/métodos:
+A API contém os seguinte endpoints/métodos:
 
 - /categorias:
   - get:
@@ -66,21 +66,28 @@ Os métodos POST, por permitirem envio de imagens, devem ter como Content-type: 
 
 Para armazenamento dos recursos: Marca, Categoria e Produto, assim como suas imagens anexadas, optou-se por usar arquivo JSON gravados no S3.
 
-## Requisitos para uso do repositório:
+## Pré Requisitos para uso do repositório:
 
-Para conseguir rodar o projeto contido nesse repositório deve-se:
+Para desenvolver a solução usamos o VSCode.
+Abaixo seguem algumas orientações e softwares que usamos para o projeto:
 
 - Ter uma conta na AWS.
   - Por questão de boas práticas não devemos usar nossa conta root;
-- Instalar o AWS CLI e configurar as credenciais do usuário AWS usando:
+- Instalar o AWS CLI:
+  - AWS CLI - [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+- Instalar o AWS SAM CLI:
   - SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+- Configurar suas credencias:
 
 ```bash
 $> aws configure
 ```
 
+- Instalar o AWS Toolkit for Visual Studio Code - [Install Toolkit](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/setup-toolkit.html)
 - Node.js - [Install Node.js 14](https://nodejs.org/en/)
 - Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
+
+O Docker é útil para invocação local das Lambdas functions.
 
 Após a instalação dos pré-requisitos acima, clonar o repositório e dentro da pasta do projeto, executar:
 
@@ -97,3 +104,8 @@ Para esse primeiro deploy é interessante usarmos a opção --guided. Teremos um
 - **Confirm changes before deploy**: Se sim, serão exibidas as alterações antes de serem gravadas.
 - **Allow SAM CLI IAM role creation**: Informa se permite que os papéis necessários sejam automaticamente criado.
 - **Save arguments to samconfig.toml**: Se sim, suas escolhas serão gravadas em um arquivo de configuração sendo usado nos demais deploy, bastando executar **sam deploy**.
+
+No repositório temos o arquivo:
+
+- **DesafioBackendCM-app-Prod-swagger-apigateway.yaml**
+  Esse arquivo foi gerado a partir do Insomnia e contém requests de exemplo de chamadas à API para todos os endpoints disponibilizados. Para usa-lo basta instalar o [Insomnia](https://insomnia.rest/download) e realizar a importação. Será criada uma workspace e nela conterá dos os endpoints.
