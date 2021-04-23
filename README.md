@@ -1,34 +1,71 @@
 # Desafio Backend Developer Casa Magalhães
 
-Esse projeto é a resposta do desafio técnico para a vaga de desenvolvedor backend, cuja as especificações estão descritas no link abaixo:
+Esse projeto é a resposta do desafio técnico para a vaga de desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambdas function, as especificações estão descritas no link abaixo:
 
 [Especificações do desafio](https://gist.github.com/andersao/664a9a45ee550beb0b4905a5236e86d5)
 
 ## Arquitetura
 
-- hello-world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- hello-world/tests - Unit tests for the application code.
-- template.yaml - A template that defines the application's AWS resources.
+A API REST foi estruturada com base nas linguagens e ferramentas resumidas abaixo:
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+- [AWS API Gateway](https://aws.amazon.com/pt/api-gateway/)
+- [AWS Serverless Application Model](https://aws.amazon.com/pt/serverless/sam/)
+- [AWS S3](https://aws.amazon.com/pt/s3/)
+- [AWS Toolkit for Visual Studio Code](https://aws.amazon.com/pt/visualstudiocode/)
+- [NodeJS 14.x](https://nodejs.org/en/)
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
+A API está implantada no API Gateway na URL abaixo:
 
-- [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-- [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-- [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+- [API REST URL](https://u150v2ccc6.execute-api.sa-east-1.amazonaws.com/Prod/)
 
-## Deploy the sample application
+Para implementação dos enpoints da API no API Gateway usamos o SAM Template, que consta nesse repositório.
+
+A API consta dos seguinte endpoints/métodos:
+
+- /categorias:
+  - get:
+  - post:
+- /categorias/{id}:
+
+  - get:
+  - put:
+  - delete:
+  - patch:
+
+- /marcas:
+  - get:
+  - post:
+- /marcas/{id}:
+
+  - get:
+  - put:
+  - delete:
+  - patch:
+
+- /produtos:
+  - get:
+  - post:
+- /produtos/{id}:
+  - get:
+  - put:
+  - delete:
+  - patch:
+
+Os métodos GET aceitam paginação com base nas seguintes query string (opcionais):
+
+- **offset** - Quantidade de registros a avançar da resposta - padrão: 0;
+- **limit** - Quantidade de registros a devolver - padrão: 100;
+
+Para os recursos **Marcas** e **Categorias** o método GET aceita as seguintes querystring: **nome**;
+
+Para **Produtos** o método GET aceita as seguintes querystring: **marca, categoria, descricao**;
+O filtro por descrição pode ser parcial, buscando a string passada em qualquer posição da descrição do produto.
+
+Os métodos POST, por permitirem envio de imagens, devem ter como Content-type: **multipart/form-data**.
+
+Para armazenamento dos recursos: Marca, Categoria e Produto, assim como suas imagens anexadas, optou-se por usar arquivo JSON gravados no S3.
+
+## Deployment
 
 The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
 

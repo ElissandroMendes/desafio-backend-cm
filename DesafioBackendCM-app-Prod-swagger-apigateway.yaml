@@ -1,0 +1,144 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: "DesafioBackendCM-app"
+host: "u150v2ccc6.execute-api.sa-east-1.amazonaws.com"
+basePath: "/Prod"
+schemes:
+- "https"
+paths:
+  /categorias:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriaGetFunction-8WFEU3O74KA/invocations"
+        passthroughBehavior: "when_no_match"
+    post:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriaAddFunction-1YJ6OYD4Z702/invocations"
+        passthroughBehavior: "when_no_match"
+  /categorias/{id}:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriaGetFunction-8WFEU3O74KA/invocations"
+        passthroughBehavior: "when_no_match"
+    put:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriaUpdateFunction-1FVN381D9UJB7/invocations"
+        passthroughBehavior: "when_no_match"
+    delete:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriasDeleteFunction-1QTFVV69NWCV9/invocations"
+        passthroughBehavior: "when_no_match"
+    patch:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-CategoriaUpdateFunction-1FVN381D9UJB7/invocations"
+        passthroughBehavior: "when_no_match"
+  /marcas:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaGetFunction-11T0YNPKB6I1D/invocations"
+        passthroughBehavior: "when_no_match"
+    post:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaAddFunction-193261IYK4RWR/invocations"
+        passthroughBehavior: "when_no_match"
+  /marcas/{id}:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaGetFunction-11T0YNPKB6I1D/invocations"
+        passthroughBehavior: "when_no_match"
+    put:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaUpdateFunction-1U4XV0K7I1Y64/invocations"
+        passthroughBehavior: "when_no_match"
+    delete:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaDeleteFunction-1GK6RHY2WZS7U/invocations"
+        passthroughBehavior: "when_no_match"
+    patch:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-MarcaUpdateFunction-1U4XV0K7I1Y64/invocations"
+        passthroughBehavior: "when_no_match"
+  /produtos:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutoGetFunction-1UC9JXWGW88UM/invocations"
+        passthroughBehavior: "when_no_match"
+    post:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutoAddFunction-IPS7Z61WYUTM/invocations"
+        passthroughBehavior: "when_no_match"
+  /produtos/{id}:
+    get:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutoGetFunction-1UC9JXWGW88UM/invocations"
+        passthroughBehavior: "when_no_match"
+    put:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutoUpdateFunction-BL9O2E3SKRC8/invocations"
+        passthroughBehavior: "when_no_match"
+    delete:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutosDeleteFunction-8AYPVWXXQHGS/invocations"
+        passthroughBehavior: "when_no_match"
+    patch:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:188023916529:function:DesafioBackendCM-app-ProdutoUpdateFunction-BL9O2E3SKRC8/invocations"
+        passthroughBehavior: "when_no_match"
+x-amazon-apigateway-binary-media-types:
+- "multipart/form-data"
