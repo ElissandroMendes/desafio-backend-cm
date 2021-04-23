@@ -64,15 +64,12 @@ async function getCategoriesObjectFromS3() {
 };
 
 async function addToCategoriesList(categoryData) {
-    console.log("-4-");
-    let categoriesObject = await getCategoriesObjectFromS3();
-    console.log("-5-");
+    let categoriesObject = await utils.getObjectsFromS3(s3, "categorias", process.env.CATEGORIAS_FILE_NAME);
     let categoriesList = categoriesObject.categorias;
-    console.log("categoriesList: " + JSON.stringify(categoriesList));
     if (!utils.findItemByKey(categoriesList, 'nome', categoryData.nome)) {        
-        const imageNameS3 = await utils.uploadFileIntoS3(s3, categoryData.imagem);
-
         categoryData.id = utils.getLastId(categoriesList) + 1;
+        
+        const imageNameS3 = await utils.uploadFileIntoS3(s3, categoryData.imagem);
         categoryData.imagem = imageNameS3;
         categoriesList.push(categoryData); 
     }

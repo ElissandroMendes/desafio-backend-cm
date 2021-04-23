@@ -45,24 +45,8 @@ async function parseAndValidateBody(event) {
     return {brandData, isValid, message};
 };
 
-async function getBrandsObjectFromS3() {
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: process.env.MARCAS_FILE_NAME
-    };
-
-    let brandsObject = {"marcas": []};
-    try {
-        let objects = await s3.getObject(params).promise();
-        brandsObject = JSON.parse(objects.Body.toString());
-    } catch (err) {
-        console.log('Object does not exist.');
-    }
-    return brandsObject;
-};
-
 async function addToBrandsList(brandData) {
-    let brandsObject = await getBrandsObjectFromS3();
+    let brandsObject = await utils.getObjectsFromS3(s3, "marcas", process.env.MARCAS_FILE_NAME);
     let brandsList = brandsObject.marcas;
     if (!utils.findItemByKey(brandsList, 'nome', brandData.nome)) {        
         const imageNameS3 = await utils.uploadFileIntoS3(s3, brandData.imagem);
