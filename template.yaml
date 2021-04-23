@@ -48,7 +48,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appMarcasList.listMarcasHandler
+      Handler: apps/marcas/appMarcasList.listMarcasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -67,7 +67,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appMarcasAdd.addMarcasHandler
+      Handler: apps/marcas/appMarcasAdd.addMarcasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -81,7 +81,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appMarcasUpdate.updateMarcasHandler
+      Handler: apps/marcas/appMarcasUpdate.updateMarcasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -100,7 +100,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appMarcasDelete.deleteMarcasHandler
+      Handler: apps/marcas/appMarcasDelete.deleteMarcasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -114,7 +114,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appCategoriasList.listCategoriasHandler
+      Handler: apps/categorias/appCategoriasList.listCategoriasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -133,7 +133,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appCategoriasAdd.addCategoriasHandler
+      Handler: apps/categorias/appCategoriasAdd.addCategoriasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -147,7 +147,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appCategoriasUpdate.updateCategoriasHandler
+      Handler: apps/categorias/appCategoriasUpdate.updateCategoriasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
@@ -166,7 +166,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: desafio-cm/
-      Handler: apps/appCategoriasDelete.deleteCategoriasHandler
+      Handler: apps/categorias/appCategoriasDelete.deleteCategoriasHandler
       Policies:
       - AmazonS3FullAccess
       Events:
