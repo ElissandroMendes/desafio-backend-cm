@@ -16,6 +16,7 @@ exports.listProdutosHandler = async (event, context, callback) => {
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
         
         products = utils.applyPagination(products, offset, limit);
+        console.log("products: " + JSON.stringify(products));
 
         // Troca os ID's pelos objetos de marcas e categorias na listagem.
         let brands = await utils.getObjectsFromS3(s3, "marcas", process.env.MARCAS_FILE_NAME);

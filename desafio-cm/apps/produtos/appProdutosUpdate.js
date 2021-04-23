@@ -11,19 +11,23 @@ exports.updateProdutosHandler = async (event, context, callback) => {
     const notFound = [404, {"message": "Product not found."}];
     const productUpdated = [200, {"message": "Product updated successfully."}];
     try {
+        let newProductData = {};
+        
         const parsedData = await parser.parse(event);
         const { id } = event.pathParameters;
 
-        let newProductData = {};
+        Object.assign(newProductData, parsedData);
         newProductData.id = id;
-        newProductData.nome = parsedData.nome;
-        newProductData.imagem = parsedData.files && parsedData.files.length ? 
-            parsedData.files[0] : '';
+        newProductData.categorias = JSON.parse(parsedData.categorias);
+        newProductData.imagens = parsedData.files;
+        delete newProductData.files;
+        console.log("newProductData: " + JSON.stringify(newProductData));
 
         const productsObjects = await utils.getObjectsFromS3(s3, "produtos", 
             process.env.PRODUTOS_FILE_NAME);
 
         console.log("productsObjects: " + JSON.stringify(productsObjects));
+
         const productsList = productsObjects.produtos;
 
         let productFound = false;
@@ -31,15 +35,22 @@ exports.updateProdutosHandler = async (event, context, callback) => {
             let product = productsList[idx];
             productFound = productsList[idx].id == newProductData.id;
             if (productFound) {
-                productsList[idx].nome = newProductData.nome;
-                if (newProductData.imagem) {
-                    productsList[idx].imagem = utils.uploadFileIntoS3(s3, newProductData.imagem);
+                Object.assign(product, newProductData);
+                if (newProductData.imagens) {
+                    let imagens = [];
+                    await Promise.all(
+                        newProductData.imagens.map(async file => {
+                            imagens.push(await utils.uploadFileIntoS3(s3, file));
+                        })
+                    );            
+                    productsList[idx].imagens = imagens;
                 };
                 break;
             };
         };
 
         if (productFound) {
+            console.log("productsObjects Depois: " + JSON.stringify(productsObjects));
             await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", productsObjects);
             callback(null, utils.buildResponse(...productUpdated));
         } else {

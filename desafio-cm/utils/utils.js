@@ -38,15 +38,14 @@ exports.buildQueryParams = (s3Key, modelName, whereClause) => {
   }
 };
 
-exports.saveToS3 = async (S3, S3Key, modelName, brandData) => {
-  brandData.marcas = exports.sortArrayByKey(brandData[modelName], 'nome');
+exports.saveToS3 = async (S3, S3Key, modelName, modelData, orderField='nome') => {
+  modelData[modelName] = exports.sortArrayByKey(modelData[modelName], orderField);
 
   let params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: S3Key,
-      Body: JSON.stringify(brandData)
+      Body: JSON.stringify(modelData)
   }
-
   let result = await S3.putObject(params).promise();
   return result;
 };
@@ -104,7 +103,7 @@ exports.getLastId = (modelList) => {
     const obj = modelList.reduce((p, q) => p.id > q.id ? p : q);
     maxId = obj.id;
   }
-  return maxId;
+  return Number(maxId);
 };
 
 exports.removeItemById = (items, id) => {
@@ -121,16 +120,17 @@ exports.removeItemById = (items, id) => {
 };
 exports.getObjectsFromS3 = async (S3, modelName, S3Key) => {
   const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: S3Key
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: S3Key
   };
+
   let modelObjects = {};
   modelObjects[modelName] = [];
   try {
-      let objects = await S3.getObject(params).promise();
-      modelObjects = JSON.parse(objects.Body.toString());
+    let objects = await S3.getObject(params).promise();
+    modelObjects = JSON.parse(objects.Body.toString());
   } catch (err) {
-      console.log(`Object ${S3Key} does not exist.`);
+    console.log(`Object ${S3Key} does not exist.`);
   }
   return modelObjects;
 }
