@@ -137,7 +137,7 @@ Resources:
       Policies:
       - AmazonS3FullAccess
       Events:
-        MarcasAdd:
+        CategoriasAdd:
           Type: Api
           Properties:
             Path: /categorias
@@ -174,4 +174,70 @@ Resources:
           Type: Api
           Properties:
             Path: /categorias/{id}
+            Method: delete
+
+  ProdutoGetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: apps/produtos/appProdutosList.listProdutosHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        ProdutosListAll:
+          Type: Api
+          Properties:
+            Path: /produtos
+            Method: get
+        ProdutosListById:
+          Type: Api
+          Properties:
+            Path: /produtos/{id}
+            Method: get
+
+  ProdutoAddFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: apps/produtos/appProdutosAdd.addProdutosHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        ProdutosAdd:
+          Type: Api
+          Properties:
+            Path: /produtos
+            Method: post
+
+  ProdutoUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: apps/produtos/appProdutosUpdate.updateProdutosHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        ProdutosPut:
+          Type: Api
+          Properties:
+            Path: /produtos/{id}
+            Method: put
+        ProdutosPatch:
+          Type: Api
+          Properties:
+            Path: /produtos/{id}
+            Method: patch
+
+  ProdutosDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: desafio-cm/
+      Handler: apps/produtos/appProdutosDelete.deleteProdutosHandler
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        ProdutosDeleteById:
+          Type: Api
+          Properties:
+            Path: /produtos/{id}
             Method: delete
