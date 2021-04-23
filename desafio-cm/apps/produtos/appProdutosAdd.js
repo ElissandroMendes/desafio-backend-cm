@@ -17,7 +17,7 @@ exports.addProdutosHandler = async (event, context, callback) => {
                 await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", 
                     newProductsList.productsObject);
             } else {
-                callback(null, utils.buildResponse(400, {"message": "Product already exists in the brand list."}));
+                callback(null, utils.buildResponse(400, {"message": "There is a Product with the same description and brand."}));
             }
         } else {
             callback(null, utils.buildResponse(403, {message}));
@@ -97,14 +97,11 @@ async function addToProductsList(productData) {
 
 function canAddProductToList (productList, newProductData) {
     const productListOrdered = utils.sortArrayByKey(productList, 'marca');
-    console.log("productListOrdered: " + JSON.stringify(productListOrdered));  
     let duplicateInBrandsProductFound = false;
     for (let idx = 0; idx < productListOrdered.length; idx++) {
         const product = productListOrdered[idx];
-        console.log("product.marca: " + product.marca);  
-        console.log("product.descricao: " + product.descricao);  
         if (product.marca == newProductData.marca && product.descricao == newProductData.descricao) {
-            duplicateInBrandProductFound = true;
+            duplicateInBrandsProductFound = true;
             break;
         };
     };
