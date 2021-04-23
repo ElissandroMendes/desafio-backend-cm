@@ -13,8 +13,12 @@ exports.addCategoriasHandler = async (event, context, callback) => {
         const {categoryData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
             newCategoriesList = await addToCategoriesList(categoryData);
-            await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", 
-                newCategoriesList.categoriesObject);
+            if (newCategoriesList.id) {
+                await utils.saveToS3(s3, process.env.CATEGORIAS_FILE_NAME, "categorias", 
+                    newCategoriesList.categoriesObject);
+            } else {
+                callback(null, utils.buildResponse(403, {"message": "Category already exists."}));
+            }
         } else {
             callback(null, utils.buildResponse(403, message));
         }

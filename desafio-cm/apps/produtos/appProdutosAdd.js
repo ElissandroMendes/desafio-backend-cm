@@ -13,9 +13,12 @@ exports.addProdutosHandler = async (event, context, callback) => {
         const {productData, isValid, message} = await parseAndValidateBody(event);
         if (isValid) {
             newProductsList = await addToProductsList(productData);
-            console.log("newProductsList.productsObject" + JSON.stringify(newProductsList.productsObject));
-            await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", 
-                newProductsList.productsObject);
+            if (newProductsList.id) {
+                await utils.saveToS3(s3, process.env.PRODUTOS_FILE_NAME, "produtos", 
+                    newProductsList.productsObject);
+            } else {
+                callback(null, utils.buildResponse(400, {"message": "Product already exists in the brand list."}));
+            }
         } else {
             callback(null, utils.buildResponse(403, {message}));
         }
@@ -73,6 +76,8 @@ async function addToProductsList(productData) {
     console.log("productsObject: " + JSON.stringify(productsObject));
     let productsList = productsObject.produtos;
     console.log("productsList: " + JSON.stringify(productsList));
+
+    let response = {"id": null, productsObject};
     if (canAddProductToList(productsList, productData)) {        
         productData.id = utils.getLastId(productsList) + 1;
 
@@ -85,15 +90,19 @@ async function addToProductsList(productData) {
 
         productData.imagens = imagens;
         productsList.push(productData); 
+        response.id = productData.id;
     }
-    return {"id": productData.id, productsObject};
+    return response;
 };
 
 function canAddProductToList (productList, newProductData) {
-    const productListOrdered = utils.sortArrayByKey(productList, 'marca');  
+    const productListOrdered = utils.sortArrayByKey(productList, 'marca');
+    console.log("productListOrdered: " + JSON.stringify(productListOrdered));  
     let duplicateInBrandsProductFound = false;
     for (let idx = 0; idx < productListOrdered.length; idx++) {
         const product = productListOrdered[idx];
+        console.log("product.marca: " + product.marca);  
+        console.log("product.descricao: " + product.descricao);  
         if (product.marca == newProductData.marca && product.descricao == newProductData.descricao) {
             duplicateInBrandProductFound = true;
             break;
