@@ -59,13 +59,26 @@ Os métodos GET aceitam paginação com base nas seguintes query string (opciona
 Para os recursos **Marcas** e **Categorias** o método GET aceita as seguintes querystring: **nome**;
 
 Para **Produtos** o método GET aceita as seguintes querystring: **marca, categoria, descricao**;
+
 O filtro por descrição pode ser parcial, buscando a string passada em qualquer posição da descrição do produto.
 
 Os métodos POST, por permitirem envio de imagens, devem ter como Content-type: **multipart/form-data**.
 
 Para armazenamento dos recursos: Marca, Categoria e Produto, assim como suas imagens anexadas, optou-se por usar arquivo JSON gravados no S3.
 
-## Deployment
+## Requisitos para uso do repositório:
+
+Para conseguir rodar o projeto contido nesse repositório deve-se:
+
+- Ter uma conta na AWS.
+
+  - Por questão de boas práticas não devemos usar nossa conta root;
+
+- Instalar o AWS CLI e configurar as credenciais do usuário AWS usando:
+
+```bash
+$> aws configure
+```
 
 The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
 
