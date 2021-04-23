@@ -12,7 +12,7 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
     const brandUpdated = [200, {"message": "Category updated successfully."}];
     try {
         const parsedData = await parser.parse(event);
-        const { id } = event.pathParameters;
+        const { id } = event.pathParameters || {};
 
         let newCategoryData = {};
         newCategoryData.id = id;
@@ -22,8 +22,6 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
 
         const categoriesObjects = await utils.getObjectsFromS3(s3, "categorias", 
             process.env.CATEGORIAS_FILE_NAME);
-
-        console.log("categoriesObjects: " + JSON.stringify(categoriesObjects));
         const categoriesList = categoriesObjects.categorias;
 
         let brandFound = false;
@@ -33,7 +31,7 @@ exports.updateCategoriasHandler = async (event, context, callback) => {
             if (brandFound) {
                 categoriesList[idx].nome = newCategoryData.nome;
                 if (newCategoryData.imagem) {
-                    categoriesList[idx].imagem = utils.uploadFileIntoS3(s3, 
+                    categoriesList[idx].imagem = await utils.uploadFileIntoS3(s3, 
                         newCategoryData.imagem);
                 };
                 break;

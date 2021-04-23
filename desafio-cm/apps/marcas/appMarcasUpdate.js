@@ -12,7 +12,7 @@ exports.updateMarcasHandler = async (event, context, callback) => {
     const brandUpdated = [200, {"message": "Brand updated successfully."}];
     try {
         const parsedData = await parser.parse(event);
-        const { id } = event.pathParameters;
+        const { id } = event.pathParameters || {};
 
         let newBrandData = {};
         newBrandData.id = id;
@@ -32,7 +32,7 @@ exports.updateMarcasHandler = async (event, context, callback) => {
                 brandsList[idx].nome = newBrandData.nome;
                 if (newBrandData.imagem) {
                     brandsList[idx].imagem = 
-                        utils.uploadFileIntoS3(s3, newBrandData.imagem);
+                        await utils.uploadFileIntoS3(s3, newBrandData.imagem);
                 };
                 break;
             };

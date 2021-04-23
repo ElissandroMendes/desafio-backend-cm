@@ -7,6 +7,7 @@ const s3 = new AWS.S3({ region: process.env.AWS_REGION });
 
 exports.listCategoriasHandler = async (event, context, callback) => {
     try {
+        const { id } = event.pathParameters || {};
         const queryParam = event.queryStringParameters;
         const nome = utils.getQueryParam(queryParam, 'nome', ''); 
         const whereClause = nome ? `model.nome='${nome}'` : '';
@@ -17,6 +18,9 @@ exports.listCategoriasHandler = async (event, context, callback) => {
         const limit = utils.getQueryParam(queryParam, 'limit', 100); 
         
         data = utils.applyPagination(data, offset, limit);
+        if (id) {
+            data = data.filter(it => it.id == id);
+        }
 
         callback(null, utils.buildResponse(200, {data}));
     } catch (err) {
