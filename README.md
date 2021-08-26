@@ -1,4 +1,4 @@
-# Desafio Backend Developer Casa Magalhães
+# Desafio Backend Developer
 
 Esse projeto é a resposta do desafio técnico para desenvolvedor backend, cuja inteção é construir uma API REST que rode baseada em AWS Lambda functions, as especificações estão descritas no link abaixo:
 
